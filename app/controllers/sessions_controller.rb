@@ -1,4 +1,5 @@
 class SessionsController < Devise::SessionsController
+  skip_before_action :authorize_request, except: :destroy
 
   def create
     if current_user.present?

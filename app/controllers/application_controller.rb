@@ -1,15 +1,16 @@
 class ApplicationController < ActionController::API
-  prepend_before_action :authenticate_user!
   before_action :authorize_request
+
+  respond_to :json
 
   protected
 
     def authorize_request
-      header = request.headers['Authorization']
-      header = header.split(' ').last if header
+      token = request.headers['Authorization']
+      token = token.split(' ').last if token
       begin
-        decoded = JsonWebToken.decode(header)
-        Wms::User.find(decoded[:user_id])
+        decoded = JsonWebToken.decode(token)
+        @current_user = User.find(decoded[:user_id])
       rescue ActiveRecord::RecordNotFound => e
         render json: { errors: e.message }, status: :unauthorized
       rescue JWT::DecodeError => e
