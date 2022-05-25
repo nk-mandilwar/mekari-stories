@@ -3,7 +3,7 @@ class PostsController < ApplicationController
 
   # GET /posts
   def index
-    @posts = Post.all
+    @posts = Post.joins(:comments).group(:id).order("count(posts.id) DESC")
     if params[:user_id].present?
       @posts = @posts.where(user_id: params[:user_id])
     end
