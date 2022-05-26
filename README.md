@@ -47,9 +47,9 @@ a. Write Sql query.
 b. Write Active Record Statements
 
 * Answer 1
-a) SELECT posts.id, posts.title, count(posts.id) as comments_count FROM posts INNER JOIN comments ON comments.post_id = posts.id GROUP BY posts.id ORDER BY comments_count DESC
+a) SELECT posts.id, posts.title, count(posts.id) as comments_count FROM posts INNER JOIN comments ON comments.post_id = posts.id WHERE comments.parent_id IS NULL GROUP BY posts.id ORDER BY comments_count DESC
 
-b) Post.joins(:comments).group(:id).order("comments_count DESC").select("posts.id, posts.title, count(posts.id) as comments_count")
+b) Post.joins(:comments).where("comments.parent_id IS NULL").group(:id).order("comments_count DESC").select("posts.id, posts.title, count(posts.id) as comments_count")
 
 *  2
 
@@ -58,6 +58,6 @@ a. Write Sql query
 b. Write Active Record Statements
 
 * Answer
-a)   SELECT users.id, count(users.id) as comments_count FROM users INNER JOIN comments ON comments.user_id = users.id WHERE (comments.parent_id IS NULL) GROUP BY users.id ORDER BY comments_count DESC
+a)   SELECT users.id, count(users.id) as comments_count FROM users INNER JOIN comments ON comments.user_id = users.id WHERE comments.parent_id IS NULL GROUP BY users.id ORDER BY comments_count DESC
 
 b)  User.joins(:comments).where("comments.parent_id IS NULL").group(:id).order("comments_count DESC").select("users.id, count(users.id) as comments_count")
